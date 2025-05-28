@@ -13,15 +13,16 @@ steps:
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.11'
-    jdkArchitectureOption: 'x64'
+    goals: 'package'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(System.DefaultWorkingDirectory)/target'
+    contents: '*.jar'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
 - task: PublishBuildArtifacts@1
   inputs:
     pathToPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: 'drop'
+    artifactName: 'maven-artifact'
     publishLocation: 'Container'
